@@ -11,8 +11,13 @@ public class NumberGuesserHW {
 	private int strikes = 0;
 	private int maxStrikes = 5;
 	private int number = 0;
+	private int lossCount = 0;
+	private int winCount = 0;
 	private boolean isRunning = false;
 	final String saveFile = "numberGuesserSave.txt";
+	final String strikeFile = "numberGuesserStrikes.txt";
+	final String answerFile = "numberGuesserAnswer.txt";
+	final String scoreboardFile = "numberGuesserScoreboard.txt";
 
 	/***
 	 * Gets a random number between 1 and level.
@@ -30,9 +35,14 @@ public class NumberGuesserHW {
 		System.out.println("That's right!");
 		level++;// level up!
 		saveLevel();
+		saveStrikes();
+		saveAnswer();
 		strikes = 0;
 		System.out.println("Welcome to level " + level);
 		number = getNumber(level);
+		winCount++;
+		System.out.println("Current stats:"+"\t"+"Wins: "+winCount + "\t"+"Losses: "+lossCount);
+		saveScoreboard();
 	}
 
 	private void lose() {
@@ -44,7 +54,12 @@ public class NumberGuesserHW {
 			level = 1;
 		}
 		saveLevel();
+		saveStrikes();
+		saveAnswer();
 		number = getNumber(level);
+		lossCount++;
+		System.out.println("Current stats:"+"\t"+"Wins: "+winCount + "\t"+"Losses: "+lossCount);
+		saveScoreboard();
 	}
 
 	private void processCommands(String message) {
@@ -97,6 +112,32 @@ public class NumberGuesserHW {
 			e.printStackTrace();
 		}
 	}
+	
+	private void saveStrikes() {
+		try (FileWriter fw = new FileWriter(strikeFile)){
+			fw.write(""+ strikes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void saveAnswer() {
+		try (FileWriter fw = new FileWriter(answerFile)){
+			fw.write(""+ number);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void saveScoreboard() {
+		try (FileWriter fw = new FileWriter(scoreboardFile)){
+			fw.write("Scoreboard"+"\n"+"WINS: "+winCount+"\n"+"LOSSES: "+lossCount);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private boolean loadLevel() {
 		File file = new File(saveFile);
@@ -120,6 +161,50 @@ public class NumberGuesserHW {
 		}
 		return level > 1;
 	}
+	
+	private boolean loadStrikes() {
+		File file = new File(strikeFile);
+		if (!file.exists()) {
+			return false;
+		}
+		try (Scanner reader = new Scanner(file)){
+			while (reader.hasNextLine()) {
+				int _strikes = reader.nextInt();
+				if (_strikes>0) {
+					strikes = _strikes;
+					break;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			return false;
+		}
+		return strikes > 0;
+	}
+	
+	private boolean loadAnswer() {
+		File file = new File(answerFile);
+		if(!file.exists()) {
+			return false;
+		}try (Scanner reader = new Scanner(file)){
+			while(reader.hasNextLine()) {
+				int answer = reader.nextInt();
+				number = answer;
+				break;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			return false;
+		}
+		return number>0;
+	}
+	
 
 	void run() {
 		try (Scanner input = new Scanner(System.in);) {
@@ -129,6 +214,13 @@ public class NumberGuesserHW {
 			if (loadLevel()) {
 				System.out.println("Successfully loaded level " + level + " let's continue then");
 			}
+			if (loadStrikes()) {
+				System.out.println("Successfully loaded " + strikes + " strikes.");
+			}
+			if(loadAnswer()) {
+				System.out.println("The correct guess is: " + number);
+			}
+			System.out.println("Current stats:"+"\t"+"Wins: "+winCount + "\t"+"Losses: "+lossCount);
 			number = getNumber(level);
 			isRunning = true;
 			while (input.hasNext()) {
