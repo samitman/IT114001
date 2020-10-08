@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import utils.Debug;
 
-public class SocketClient {
+public class SocketClient2 {
 	private Socket server;
 	private Thread inputThread;
 	private Thread fromServerThread;
