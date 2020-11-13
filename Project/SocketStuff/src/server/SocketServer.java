@@ -113,6 +113,19 @@ public class SocketServer {
 	return lobby;
     }
 
+    protected List<String> getRooms() {
+	// not the most efficient way to do it, but it works
+	List<String> roomNames = new ArrayList<String>();
+	Iterator<Room> iter = rooms.iterator();
+	while (iter.hasNext()) {
+	    Room r = iter.next();
+	    if (r != null && r.getName() != null) {
+		roomNames.add(r.getName());
+	    }
+	}
+	return roomNames;
+    }
+
     /***
      * Special helper to join the lobby and close the previous room client was in if
      * it's marked as Prelobby. Mostly used for prelobby once the server receives

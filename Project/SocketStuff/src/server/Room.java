@@ -38,7 +38,7 @@ public class Room implements AutoCloseable {
 	else {
 	    clients.add(client);
 	    if (client.getClientName() != null) {
-		client.sendClearList();
+		//client.sendClearList();
 		sendConnectionStatus(client, true, "joined the room " + getName());
 		updateClientList(client);
 	    }
@@ -173,6 +173,10 @@ public class Room implements AutoCloseable {
      * Will attempt to migrate any remaining clients to the Lobby room. Will then
      * set references to null and should be eligible for garbage collection
      */
+    public List<String> getRooms() {
+    	return server.getRooms();
+        }
+    
     @Override
     public void close() throws Exception {
 	int clientCount = clients.size();
