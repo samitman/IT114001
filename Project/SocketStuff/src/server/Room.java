@@ -137,6 +137,7 @@ public class Room implements AutoCloseable {
 	return wasCommand;
     }
 
+    
     // TODO changed from string to ServerThread
     protected void sendConnectionStatus(ServerThread client, boolean isConnect, String message) {
 	Iterator<ServerThread> iter = clients.iterator();
