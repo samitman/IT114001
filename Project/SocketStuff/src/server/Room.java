@@ -15,6 +15,8 @@ public class Room implements AutoCloseable {
     private final static String COMMAND_TRIGGER = "/";
     private final static String CREATE_ROOM = "createroom";
     private final static String JOIN_ROOM = "joinroom";
+    private final static String ROLL= "roll";
+    private final static String FLIP = "flip";
 
     public Room(String name) {
 	this.name = name;
@@ -122,6 +124,13 @@ public class Room implements AutoCloseable {
 		    joinRoom(roomName, client);
 		    wasCommand = true;
 		    break;
+		case ROLL:
+			//int roll = (int)((Math.random()*(6))+1);
+			//String rollMsg = Integer.toString(roll);
+			//sendRoll(ServerThread sender, rollMsg);
+			break;
+		case FLIP:
+			break;
 		}
 	    }
 	}
@@ -131,6 +140,7 @@ public class Room implements AutoCloseable {
 	return wasCommand;
     }
 
+    
     // TODO changed from string to ServerThread
     protected void sendConnectionStatus(ServerThread client, boolean isConnect, String message) {
 	Iterator<ServerThread> iter = clients.iterator();
@@ -159,7 +169,56 @@ public class Room implements AutoCloseable {
 	    return;
 	}
 	Iterator<ServerThread> iter = clients.iterator();
+	
+	//roll
+	if(message.equals("/roll")) {
+		int roll = (int)((Math.random()*(100)));
+		String rollMsg = "rolled a "+Integer.toString(roll)+" (0-100)";
+		
+		while (iter.hasNext()) {
+			
+		    ServerThread client = iter.next();
+		    boolean messageSent = client.send(sender.getClientName(), rollMsg);
+		    if (!messageSent) {
+			iter.remove();
+			log.log(Level.INFO, "Removed client " + client.getId());
+		    }
+		}
+	}
+	//flip
+	if(message.equals("/flip")) {
+		int flip = (int)((Math.random()*(2))+1);
+		
+		if(flip ==1) {
+			String flipMsg = "got heads on the coin toss";
+			while (iter.hasNext()) {
+				
+			    ServerThread client = iter.next();
+			    boolean messageSent = client.send(sender.getClientName(), flipMsg);
+			    if (!messageSent) {
+				iter.remove();
+				log.log(Level.INFO, "Removed client " + client.getId());
+			    }
+			}
+		}
+		if(flip ==2) {
+			String flipMsg = "got tails on the coin toss";
+			while (iter.hasNext()) {
+				
+			    ServerThread client = iter.next();
+			    boolean messageSent = client.send(sender.getClientName(), flipMsg);
+			    if (!messageSent) {
+				iter.remove();
+				log.log(Level.INFO, "Removed client " + client.getId());
+			    }
+			}
+		}
+		
+	}
+	
+	//regular message
 	while (iter.hasNext()) {
+		
 	    ServerThread client = iter.next();
 	    boolean messageSent = client.send(sender.getClientName(), message);
 	    if (!messageSent) {
