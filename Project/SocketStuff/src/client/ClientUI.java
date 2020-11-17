@@ -257,21 +257,37 @@ public class ClientUI extends JFrame implements Event {
 		entry.setContentType("text/html");
 		entry.setEditable(false);
 		
-		//checking if there are multiple * to correctly make in-between text bold
+		//checking if there are multiple text style triggers in the message
 		int boldCount = 0;
+		int italicsCount = 0;
+		int underLineCount = 0;
+		
 		for(int i=0;i<str.length();i++) {
 			if(str.charAt(i)=='*') {
 				boldCount++;
+			}else if(str.charAt(i)=='~') {
+				italicsCount++;
+			}else if(str.charAt(i)=='_') {
+				underLineCount++;
 			}
 		}
-		//replacing * with appropriate bold tags
+		
+		//pairs of triggers replaced with respective html tags
 		if(boldCount>=2) {
 			str = str+" ";
 			str = str.replace("*", "<b>");
 			str = str.replace("<b> ","</b> ");
 		}
-		
-	
+		if(italicsCount>=2) {
+			str = str+" ";
+			str = str.replace("~", "<i>");
+			str = str.replace("<i> ","</i> ");
+		}
+		if(underLineCount>=2) {
+			str = str+" ";
+			str = str.replace("_", "<u>");
+			str = str.replace("<u> ","</u> ");
+		}
 		
 		// entry.setLayout(null);
 		entry.setText(str);
