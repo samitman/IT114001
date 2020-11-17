@@ -51,6 +51,37 @@ public class ServerThread extends Thread {
      */
     @Deprecated
     protected boolean send(String message) {
+    	//checking if there are multiple text style triggers in the message
+		int boldCount = 0;
+		int italicsCount = 0;
+		int underLineCount = 0;
+		
+		for(int i=0;i<message.length();i++) {
+			if(message.charAt(i)=='*') {
+				boldCount++;
+			}else if(message.charAt(i)=='~') {
+				italicsCount++;
+			}else if(message.charAt(i)=='_') {
+				underLineCount++;
+			}
+		}
+		
+		//pairs of triggers replaced with respective html tags
+		if(boldCount>=2) {
+			message = message+" ";
+			message = message.replace("*", "<b>");
+			message = message.replace("<b> ","</b> ");
+		}
+		if(italicsCount>=2) {
+			message = message+" ";
+			message = message.replace("~", "<i>");
+			message = message.replace("<i> ","</i> ");
+		}
+		if(underLineCount>=2) {
+			message = message+" ";
+			message = message.replace("_", "<u>");
+			message = message.replace("<u> ","</u> ");
+		}	
 	// added a boolean so we can see if the send was successful
 	try {
 	    out.writeObject(message);
@@ -73,6 +104,37 @@ public class ServerThread extends Thread {
      * @return
      */
     protected boolean send(String clientName, String message) {
+    	//checking if there are multiple text style triggers in the message
+		int boldCount = 0;
+		int italicsCount = 0;
+		int underLineCount = 0;
+		
+		for(int i=0;i<message.length();i++) {
+			if(message.charAt(i)=='*') {
+				boldCount++;
+			}else if(message.charAt(i)=='~') {
+				italicsCount++;
+			}else if(message.charAt(i)=='_') {
+				underLineCount++;
+			}
+		}
+		
+		//pairs of triggers replaced with respective html tags
+		if(boldCount>=2) {
+			message = message+" ";
+			message = message.replace("*", "<b>");
+			message = message.replace("<b> ","</b> ");
+		}
+		if(italicsCount>=2) {
+			message = message+" ";
+			message = message.replace("~", "<i>");
+			message = message.replace("<i> ","</i> ");
+		}
+		if(underLineCount>=2) {
+			message = message+" ";
+			message = message.replace("_", "<u>");
+			message = message.replace("<u> ","</u> ");
+		}
 	Payload payload = new Payload();
 	payload.setPayloadType(PayloadType.MESSAGE);
 	payload.setClientName(clientName);
