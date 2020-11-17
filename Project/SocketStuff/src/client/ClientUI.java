@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -252,23 +252,26 @@ public class ClientUI extends JFrame implements Event {
     }
 
     void addMessage(String str) {
-	JEditorPane entry = new JEditorPane();
-	entry.setEditable(false);
-	// entry.setLayout(null);
-	entry.setText(str);
-	Dimension d = new Dimension(textArea.getSize().width, calcHeightForText(str));
-	// attempt to lock all dimensions
-	entry.setMinimumSize(d);
-	entry.setPreferredSize(d);
-	entry.setMaximumSize(d);
-	textArea.add(entry);
-
-	pack();
-	// System.out.println(entry.getSize());
-	JScrollBar sb = ((JScrollPane) textArea.getParent().getParent()).getVerticalScrollBar();
-	sb.setValue(sb.getMaximum());
+    	
+		JEditorPane entry = new JEditorPane();
+		entry.setContentType("text/html");
+		entry.setEditable(false);
+		
+		// entry.setLayout(null);
+		entry.setText(str);
+		Dimension d = new Dimension(textArea.getSize().width, calcHeightForText(str));
+		// attempt to lock all dimensions
+		entry.setMinimumSize(d);
+		entry.setPreferredSize(d);
+		entry.setMaximumSize(d);
+		textArea.add(entry);
+	
+		pack();
+		// System.out.println(entry.getSize());
+		JScrollBar sb = ((JScrollPane) textArea.getParent().getParent()).getVerticalScrollBar();
+		sb.setValue(sb.getMaximum());
     }
-
+    
     void next() {
 	card.next(this.getContentPane());
     }
