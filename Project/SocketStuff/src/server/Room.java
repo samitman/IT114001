@@ -125,11 +125,19 @@ public class Room implements AutoCloseable {
 		    wasCommand = true;
 		    break;
 		case ROLL:
-			//int roll = (int)((Math.random()*(6))+1);
-			//String rollMsg = Integer.toString(roll);
-			//sendRoll(ServerThread sender, rollMsg);
+			int roll = (int)((Math.random()*(100)));
+			String rollMsg = "rolled a "+Integer.toString(roll)+" (0-100)";
+			sendMessage(client,rollMsg);
+			wasCommand = true;
 			break;
 		case FLIP:
+			int flip = (int)((Math.random()*(2))+1);
+			String flipMsg = "got heads on the coin toss";
+			if(flip ==2) {
+				flipMsg = "got tails on the coin toss";
+			}
+			sendMessage(client,flipMsg);
+			wasCommand = true;
 			break;
 		}
 	    }
@@ -170,53 +178,6 @@ public class Room implements AutoCloseable {
 	}
 	Iterator<ServerThread> iter = clients.iterator();
 	
-	//roll
-	if(message.equals("/roll")) {
-		int roll = (int)((Math.random()*(100)));
-		String rollMsg = "rolled a "+Integer.toString(roll)+" (0-100)";
-		
-		while (iter.hasNext()) {
-			
-		    ServerThread client = iter.next();
-		    boolean messageSent = client.send(sender.getClientName(), rollMsg);
-		    if (!messageSent) {
-			iter.remove();
-			log.log(Level.INFO, "Removed client " + client.getId());
-		    }
-		}
-	}
-	//flip
-	if(message.equals("/flip")) {
-		int flip = (int)((Math.random()*(2))+1);
-		
-		if(flip ==1) {
-			String flipMsg = "got heads on the coin toss";
-			while (iter.hasNext()) {
-				
-			    ServerThread client = iter.next();
-			    boolean messageSent = client.send(sender.getClientName(), flipMsg);
-			    if (!messageSent) {
-				iter.remove();
-				log.log(Level.INFO, "Removed client " + client.getId());
-			    }
-			}
-		}
-		if(flip ==2) {
-			String flipMsg = "got tails on the coin toss";
-			while (iter.hasNext()) {
-				
-			    ServerThread client = iter.next();
-			    boolean messageSent = client.send(sender.getClientName(), flipMsg);
-			    if (!messageSent) {
-				iter.remove();
-				log.log(Level.INFO, "Removed client " + client.getId());
-			    }
-			}
-		}
-		
-	}
-	
-	//regular message
 	while (iter.hasNext()) {
 		
 	    ServerThread client = iter.next();
