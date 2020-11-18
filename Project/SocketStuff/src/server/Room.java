@@ -177,7 +177,6 @@ public class Room implements AutoCloseable {
 	    return;
 	}
 	Iterator<ServerThread> iter = clients.iterator();
-	
 	while (iter.hasNext()) {
 		
 	    ServerThread client = iter.next();
