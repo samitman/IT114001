@@ -104,6 +104,36 @@ public class ServerThread extends Thread {
 			message = message.replace("_", "<u>");
 			message = message.replace("<u> ","</u> ");
 		}
+		
+	//colors
+		int colorCount = 0;
+	    for(int i=0;i<message.length();i++) {
+				if(message.charAt(i)=='%') {
+					colorCount++;
+				}
+			}
+			
+			//pairs of color triggers replaced with appropriate html
+			if(colorCount%2==0) {
+				message = message+" ";
+				message = message.replace("% ", "</b> ");
+				
+				String[] words = message.split(" ");
+				message = "";
+				for(String word : words){
+		
+				    if(word.contains("%")){
+				        int trigger = word.indexOf('%');
+				        String color = word.substring(0,trigger);
+				        String colorStyle = "<b style=color:"+color+">";
+				        String replace = word.substring(0,trigger+1);
+				        word = word.replace(replace,colorStyle);
+				    }
+				
+				message = message + word+" ";
+				}
+			}
+		
 	Payload payload = new Payload();
 	payload.setPayloadType(PayloadType.MESSAGE);
 	payload.setClientName(clientName);
