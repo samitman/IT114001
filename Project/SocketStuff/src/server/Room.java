@@ -126,15 +126,15 @@ public class Room implements AutoCloseable {
 		    break;
 		case ROLL:
 			int roll = (int)((Math.random()*(100)));
-			String rollMsg = "rolled a "+Integer.toString(roll)+" (0-100)";
+			String rollMsg = "<b style=color:orange>rolled a "+Integer.toString(roll)+" (0-100)</b>";
 			sendMessage(client,rollMsg);
 			wasCommand = true;
 			break;
 		case FLIP:
 			int flip = (int)((Math.random()*(2))+1);
-			String flipMsg = "got heads on the coin toss";
+			String flipMsg = "<b style=color:green>got heads on the coin toss</b>";
 			if(flip ==2) {
-				flipMsg = "got tails on the coin toss";
+				flipMsg = "<b style=color:red>got tails on the coin toss</b>";
 			}
 			sendMessage(client,flipMsg);
 			wasCommand = true;
