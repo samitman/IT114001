@@ -1,5 +1,6 @@
 package client;
 
+
 public interface Event {
     void onClientConnect(String clientName, String message);
 

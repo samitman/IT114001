@@ -21,6 +21,7 @@ public class RoomsPanel extends JPanel {
     /**
      * 
      */
+	
     private static final long serialVersionUID = 1L;
     List<RoomListItem> rooms = new ArrayList<RoomListItem>();
     JPanel container;

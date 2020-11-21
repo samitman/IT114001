@@ -20,6 +20,7 @@ public class SocketServer {
     protected final static String LOBBY = "Lobby";
     private final static Logger log = Logger.getLogger(SocketServer.class.getName());
 
+    
     private void start(int port) {
 	this.port = port;
 	log.log(Level.INFO, "Waiting for client");
