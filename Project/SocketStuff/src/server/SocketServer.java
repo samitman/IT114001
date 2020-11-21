@@ -227,7 +227,6 @@ public class SocketServer {
 	}
     }
     
-
     public static void main(String[] args) {
 	// let's allow port to be passed as a command line arg
 	// in eclipse you can set this via "Run Configurations"
