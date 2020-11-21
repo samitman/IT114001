@@ -11,6 +11,7 @@ public class Room implements AutoCloseable {
     private String name;
     private final static Logger log = Logger.getLogger(Room.class.getName());
 
+    
     // Commands
     private final static String COMMAND_TRIGGER = "/";
     private final static String CREATE_ROOM = "createroom";
