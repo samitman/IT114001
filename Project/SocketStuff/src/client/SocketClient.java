@@ -19,7 +19,6 @@ public enum SocketClient {
     INSTANCE; // see https://dzone.com/articles/java-singletons-using-enum "Making Singletons
 	      // with Enum"
 
-	
     private static Socket server;
     private static Thread fromServerThread;
     private static Thread clientThread;
