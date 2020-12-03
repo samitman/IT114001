@@ -19,6 +19,8 @@ public class Room implements AutoCloseable {
     private final static String ROLL= "roll";
     private final static String FLIP = "flip";
     private final static String PM = "@";
+    private final static String MUTE = "mute";
+    private final static String UNMUTE = "unmute";
 
     public Room(String name) {
 	this.name = name;
@@ -141,6 +143,26 @@ public class Room implements AutoCloseable {
 			sendMessage(client,flipMsg);
 			wasCommand = true;
 			break;
+		case MUTE:
+			String[] splitMsg = message.split(" ");
+			//message should look something like: /mute Bob
+			String mutedClient = splitMsg[1];
+			client.mutedList.add(mutedClient);
+			sendMessage(client,"<i>muted "+mutedClient+"</i>");
+			wasCommand = true;
+			break;
+		case UNMUTE:
+			String[] splitArr = message.split(" ");
+			String unmutedClient = splitArr[1];
+			for(String name: client.mutedList) {
+				if(name.equals(unmutedClient)) {
+					client.mutedList.remove(unmutedClient);
+					sendMessage(client,"<i>unmuted "+unmutedClient+"</i>");
+					wasCommand = true;
+					break;
+				}
+			}
+		break;
 		}
 	    }
 	}
@@ -183,13 +205,14 @@ public class Room implements AutoCloseable {
 	}
 	Iterator<ServerThread> iter = clients.iterator();
 	while (iter.hasNext()) {
-		
-	    ServerThread client = iter.next();
-	    boolean messageSent = client.send(sender.getClientName(), message);
-	    if (!messageSent) {
-		iter.remove();
-		log.log(Level.INFO, "Removed client " + client.getId());
-	    }
+		ServerThread client = iter.next();
+		if(!client.isMuted(sender.getClientName())) {
+		    boolean messageSent = client.send(sender.getClientName(), message);
+		    if (!messageSent) {
+			iter.remove();
+			log.log(Level.INFO, "Removed client " + client.getId());
+		    }
+		}
 	}
     }
     
