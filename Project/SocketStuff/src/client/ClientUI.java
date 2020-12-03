@@ -77,6 +77,7 @@ public class ClientUI extends JFrame implements Event {
 	createConnectionScreen();
 	createUserInputScreen();
 
+	
 	createPanelRoom();
 	createPanelUserList();
 	this.setJMenuBar(menu);

@@ -105,6 +105,7 @@ public class ServerThread extends Thread {
 			message = message.replace("<u> ","</u> ");
 		}
 		
+		
 	//colors
 		int colorCount = 0;
 	    for(int i=0;i<message.length();i++) {
