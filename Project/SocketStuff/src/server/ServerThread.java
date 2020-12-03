@@ -116,7 +116,7 @@ public class ServerThread extends Thread {
 			//pairs of color triggers replaced with appropriate html
 			if(colorCount%2==0) {
 				message = message+" ";
-				message = message.replace("% ", "</b> ");
+				message = message.replace("% ", "</font> ");
 				
 				String[] words = message.split(" ");
 				message = "";
@@ -125,7 +125,7 @@ public class ServerThread extends Thread {
 				    if(word.contains("%")){
 				        int trigger = word.indexOf('%');
 				        String color = word.substring(0,trigger);
-				        String colorStyle = "<b style=color:"+color+">";
+				        String colorStyle = "<font color="+color+">";
 				        String replace = word.substring(0,trigger+1);
 				        word = word.replace(replace,colorStyle);
 				    }
