@@ -232,7 +232,7 @@ public class Room implements AutoCloseable {
 			        Iterator<ServerThread> iter = clients.iterator();
 					while (iter.hasNext()) {
 						ServerThread c = iter.next();
-						if (c.getClientName().equals(receiver)) {
+						if (c.getClientName().equals(receiver)&&(!c.isMuted(sender.getClientName()))) {
 							c.send(sender.getClientName(), message);
 						}
 					}
