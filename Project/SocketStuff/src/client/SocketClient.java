@@ -158,6 +158,9 @@ public enum SocketClient {
 	case MESSAGE:
 	    sendOnMessage(p.getClientName(), p.getMessage());
 	    break;
+	case CLEAR_PLAYERS:
+		sendOnChangeRoom();
+		break;
 	case GET_ROOMS:
 	    // reply from ServerThread
 	    sendRoom(p.getMessage());

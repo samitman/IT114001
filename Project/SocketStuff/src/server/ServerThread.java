@@ -167,6 +167,12 @@ public class ServerThread extends Thread {
 	return sendPayload(payload);
     }
 
+	protected boolean sendClearList() {
+		Payload payload = new Payload();
+		payload.setPayloadType(PayloadType.CLEAR_PLAYERS);
+		return sendPayload(payload);
+	}
+    
     protected boolean sendRoom(String room) {
 	Payload payload = new Payload();
 	// using same payload type as a response trigger

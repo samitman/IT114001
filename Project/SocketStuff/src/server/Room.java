@@ -44,7 +44,7 @@ public class Room implements AutoCloseable {
 	else {
 	    clients.add(client);
 	    if (client.getClientName() != null) {
-		//client.sendClearList();
+		client.sendClearList();
 		sendConnectionStatus(client, true, "joined the room " + getName());
 		updateClientList(client);
 	    }
