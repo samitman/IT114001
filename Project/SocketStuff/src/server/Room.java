@@ -148,7 +148,16 @@ public class Room implements AutoCloseable {
 			//message should look something like: /mute Bob
 			String mutedClient = splitMsg[1];
 			client.mutedList.add(mutedClient);
-			sendMessage(client,"<i>muted "+mutedClient+"</i>");
+			
+			//sends a message to the muted user and the client that muted them
+			Iterator<ServerThread> iter = clients.iterator();
+			while (iter.hasNext()) {
+				ServerThread c = iter.next();
+				if (c.getClientName().equals(mutedClient)||c.getClientName().equals(client.getClientName())) {
+					c.send(client.getClientName()," <i>muted "+mutedClient+"</i>");
+				}
+			}
+			//sendMessage(client,"<i>muted "+mutedClient+"</i>");
 			wasCommand = true;
 			break;
 		case UNMUTE:
@@ -157,7 +166,16 @@ public class Room implements AutoCloseable {
 			for(String name: client.mutedList) {
 				if(name.equals(unmutedClient)) {
 					client.mutedList.remove(unmutedClient);
-					sendMessage(client,"<i>unmuted "+unmutedClient+"</i>");
+					
+					//sends a message to the unmuted user and the client that unmuted them
+					Iterator<ServerThread> iter1 = clients.iterator();
+					while (iter1.hasNext()) {
+						ServerThread c = iter1.next();
+						if (c.getClientName().equals(unmutedClient)||c.getClientName().equals(client.getClientName())) {
+							c.send(client.getClientName()," <i>unmuted "+unmutedClient+"</i>");
+						}
+					}
+					//sendMessage(client,"<i>unmuted "+unmutedClient+"</i>");
 					wasCommand = true;
 					break;
 				}
