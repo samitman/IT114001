@@ -1,11 +1,15 @@
 package server;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +31,44 @@ public class ServerThread extends Thread {
     		}
     	}
     	return false;
+    }
+    
+    //will create a mute file and write the client names from the muted list
+    protected synchronized void createMuteFile(String name) {
+    	try {
+    		String fileName = name+"MuteFile.txt";
+			File f = new File(fileName);
+			f.createNewFile();
+			FileWriter fw = new FileWriter(fileName);
+			
+			if(!mutedList.isEmpty()) {
+				for(String clientName : mutedList) {
+					fw.write(clientName + " ");
+				}
+			}
+			fw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    //will try to read from the muted file and add the names to the muted list
+    protected synchronized void readMuteFile(String name) {
+    	try {
+    		String fileName = name+"MuteFile.txt";
+    		File f = new File(fileName);
+    		Scanner scan = new Scanner(f);
+    		while (scan.hasNextLine()) {
+				String[] mutedClients = scan.nextLine().split(" ");
+				for(String client : mutedClients) {
+					mutedList.add(client);
+				}
+    		}
+    		scan.close();
+				
+    	}catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
     }
     
     public String getClientName() {
@@ -158,10 +200,15 @@ public class ServerThread extends Thread {
 	if (isConnect) {
 	    payload.setPayloadType(PayloadType.CONNECT);
 	    payload.setMessage(message);
+	    //reads muted file if exists
+	    readMuteFile(clientName);
 	}
 	else {
+		//creates the muted file for the client
+	    createMuteFile(clientName);
 	    payload.setPayloadType(PayloadType.DISCONNECT);
 	    payload.setMessage(message);
+	    
 	}
 	payload.setClientName(clientName);
 	return sendPayload(payload);
@@ -206,6 +253,10 @@ public class ServerThread extends Thread {
 	    String n = p.getClientName();
 	    if (n != null) {
 		clientName = n;
+		
+		//tries to read contents of a muted file based on client name
+		readMuteFile(n);
+		
 		log.log(Level.INFO, "Set our name to " + clientName);
 		if (currentRoom != null) {
 		    currentRoom.joinLobby(this);
@@ -213,6 +264,9 @@ public class ServerThread extends Thread {
 	    }
 	    break;
 	case DISCONNECT:
+		//when a client disconnects, their muted list will be saved in a file
+		createMuteFile(p.getClientName());
+		
 	    isRunning = false;// this will break the while loop in run() and clean everything up
 	    break;
 	case MESSAGE:
