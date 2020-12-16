@@ -193,6 +193,20 @@ public class ClientUI extends JFrame implements Event {
 	input.add(button);
 	panel.add(input, BorderLayout.SOUTH);
 	this.add(panel, "lobby");
+	
+	JButton exportChat = new JButton("Export");
+	exportChat.addActionListener(new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			exportChat();
+		}
+
+	});
+	input.add(exportChat);
+	
+	panel.add(input, BorderLayout.SOUTH);
+	this.add(panel);
     }
 
     void createPanelUserList() {
@@ -253,6 +267,37 @@ public class ClientUI extends JFrame implements Event {
 	// System.out.println(mult);
 	mult++;
 	return size.height * mult;
+    }
+    
+    void exportChat() {
+	  //creating the chat history file
+	  	try {
+	  		File f = new File("chatHistory.txt");
+	  		if(f.createNewFile()) {
+	  			System.out.println("Chat history file created.");
+	  		}else {
+	  			System.out.println("Chat history file already exists.");
+	  		}
+	  	}catch (Exception e) { 
+	          System.err.println(e); 
+	    } 
+	  //now that the chat history file is created, we can append all the components to a string builder
+	  	StringBuilder sb = new StringBuilder();
+	  	Component[] comps = textArea.getComponents();
+	  	for(Component msg:comps) {
+	  		JEditorPane jep = (JEditorPane)msg;
+	  		if(jep!=null) {
+	  			sb.append(jep.getText()+System.lineSeparator());
+	  		}
+	  	}
+	  //now we must write the components to the file
+	  	try {
+			FileWriter fw = new FileWriter("chatHistory.txt");
+			fw.write(sb.toString());
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     void addMessage(String str) {
@@ -351,8 +396,6 @@ public class ClientUI extends JFrame implements Event {
     public void onMessageReceive(String clientName, String message) {
 	log.log(Level.INFO, String.format("%s: %s", clientName, message));
 	self.addMessage(String.format("%s: %s", clientName, message));
-	//messages are appended to the chat history file
-	writeToFile("chatHistory.txt",clientName+": "+message);
     }
 
     @Override
@@ -376,18 +419,6 @@ public class ClientUI extends JFrame implements Event {
 	if (ui != null) {
 	    log.log(Level.FINE, "Started");
 	}
-	
-	//creating the chat history file
-	try {
-		File f = new File("chatHistory.txt");
-		if(f.createNewFile()) {
-			System.out.println("Chat history file created.");
-		}else {
-			System.out.println("Chat history file already exists.");
-		}
-	}catch (Exception e) { 
-        System.err.println(e); 
-    } 
     }
 
     @Override
