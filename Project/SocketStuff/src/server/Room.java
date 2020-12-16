@@ -1,5 +1,8 @@
 package server;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -149,6 +152,28 @@ public class Room implements AutoCloseable {
 			String mutedClient = splitMsg[1];
 			client.mutedList.add(mutedClient);
 			
+			try {
+	    		String fileName = client.getClientName()+"MuteFile.txt";
+				File f = new File(fileName);
+				FileWriter fw = new FileWriter(fileName);
+				
+				if(f.createNewFile()) {
+					System.out.println("Created "+client.getClientName()+" mute file.");
+					for(String clientName: client.mutedList) {
+						fw.write(clientName + " ");
+					}
+					fw.close();
+				}else {
+					for(String clientName: client.mutedList) {
+						fw.write(clientName + " ");
+					}
+					fw.close();
+				}
+	
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			//sends a message to the muted user and the client that muted them
 			Iterator<ServerThread> iter = clients.iterator();
 			while (iter.hasNext()) {
@@ -158,6 +183,7 @@ public class Room implements AutoCloseable {
 				}
 			}
 			//sendMessage(client,"<i>muted "+mutedClient+"</i>");
+			
 			wasCommand = true;
 			break;
 		case UNMUTE:
@@ -166,7 +192,29 @@ public class Room implements AutoCloseable {
 			for(String name: client.mutedList) {
 				if(name.equals(unmutedClient)) {
 					client.mutedList.remove(unmutedClient);
-					
+			try {
+	    		String fileName = client.getClientName()+"MuteFile.txt";
+				File f = new File(fileName);
+				FileWriter fw = new FileWriter(fileName);
+				
+				if(f.createNewFile()) {
+					System.out.println("Created "+client.getClientName()+" mute file.");
+					for(String clientName: client.mutedList) {
+						fw.write(clientName + " ");
+					}
+					fw.close();
+				}else {
+					for(String clientName: client.mutedList) {
+						fw.write(clientName + " ");
+					}
+					if(client.mutedList.isEmpty()) {
+						fw.write("");
+					}
+					fw.close();
+				}
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
 					//sends a message to the unmuted user and the client that unmuted them
 					Iterator<ServerThread> iter1 = clients.iterator();
 					while (iter1.hasNext()) {

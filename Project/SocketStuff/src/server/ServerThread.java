@@ -42,7 +42,9 @@ public class ServerThread extends Thread {
 			FileWriter fw = new FileWriter(fileName);
 			
 			if(!mutedList.isEmpty()) {
-				for(String clientName : mutedList) {
+				System.out.println(mutedList.toString());
+				for(String clientName: mutedList) {
+					//System.out.println(clientName);
 					fw.write(clientName + " ");
 				}
 			}
@@ -52,6 +54,7 @@ public class ServerThread extends Thread {
 			e.printStackTrace();
 		}
     }
+    
     //will try to read from the muted file and add the names to the muted list
     protected synchronized void readMuteFile(String name) {
     	try {
@@ -204,8 +207,7 @@ public class ServerThread extends Thread {
 	    readMuteFile(clientName);
 	}
 	else {
-		//creates the muted file for the client
-	    createMuteFile(clientName);
+		
 	    payload.setPayloadType(PayloadType.DISCONNECT);
 	    payload.setMessage(message);
 	    
@@ -264,9 +266,6 @@ public class ServerThread extends Thread {
 	    }
 	    break;
 	case DISCONNECT:
-		//when a client disconnects, their muted list will be saved in a file
-		createMuteFile(p.getClientName());
-		
 	    isRunning = false;// this will break the while loop in run() and clean everything up
 	    break;
 	case MESSAGE:
