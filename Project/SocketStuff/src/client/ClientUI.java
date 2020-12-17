@@ -429,4 +429,17 @@ public class ClientUI extends JFrame implements Event {
 	    pack();
 	}
     }
+    
+    @Override
+    public void onMute(String clientName, boolean isMuted) {
+    	Iterator<User> iter = users.iterator();
+    	while (iter.hasNext()) {
+    		User u = iter.next();
+    		if(u.getName.equals(clientName)) {
+    			if(isMuted) {
+    			clientName.setName("<i>%s</i>",clientName);
+    		}
+    	}
+    }
+    }
 }
